@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../utils/formatDate';
+import { formatReadingTime } from '../utils/formatReadingTime';
+import TagList from './TagList.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const readingTime = formatReadingTime(post.body);
+---
+
+<article class="post-item">
+  <a class="post-item-title" href={`/blog/${post.id}`}>{post.data.title}</a>
+  <div class="post-item-meta">
+    <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+    <span aria-hidden="true">&middot;</span>
+    <span>{readingTime}</span>
+  </div>
+  {
+    post.data.tags.length > 0 && (
+      <div class="post-item-tags">
+        <TagList tags={post.data.tags} />
+      </div>
+    )
+  }
+  <p class="post-item-excerpt">{post.data.description}</p>
+</article>
+
+<style>
+  .post-item-tags {
+    margin-top: 6px;
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+import { education } from '../data/experience';
+
+interface Props {
+  showTitle?: boolean;
+}
+
+const { showTitle = true } = Astro.props;
+---
+
+{
+  showTitle && <h2 class="section-title">Education</h2>
+}
+
+{
+  education.map((item) => (
+    <div class="card timeline-item">
+      <div class="experience-item">
+        <div class="experience-content">
+          <p class="exp-title"><strong>{item.degree}</strong></p>
+          <p class="exp-detail">{item.school}{item.location ? `, ${item.location}` : ''}</p>
+          <p class="exp-period">{item.period}</p>
+        </div>
+      </div>
+    </div>
+  ))
+}

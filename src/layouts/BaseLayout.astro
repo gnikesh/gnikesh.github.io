@@ -1,0 +1,149 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../data/site';
+import { websiteSchema, type Schema } from '../lib/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  schema?: Schema | Schema[];
+  ogType?: 'website' | 'article' | 'profile';
+  articleMeta?: {
+    publishedTime: string;
+    modifiedTime: string;
+    authorUrl: string;
+    section?: string;
+    tags?: string[];
+  };
+}
+
+const {
+  title,
+  description = site.description,
+  image = site.ogImage,
+  noindex = false,
+  schema,
+  ogType = 'website',
+  articleMeta,
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ${site.title}` : site.title;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
+const canonicalUrl = canonical.toString();
+const absoluteImage = new URL(image, canonicalUrl).toString();
+const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      )
+    }
+    <meta name="author" content={site.author.name} />
+
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={absoluteImage} />
+    <meta property="og:image:alt" content={site.author.name} />
+    {
+      articleMeta && (
+        <>
+          <meta property="article:published_time" content={articleMeta.publishedTime} />
+          <meta property="article:modified_time" content={articleMeta.modifiedTime} />
+          <meta property="article:author" content={articleMeta.authorUrl} />
+          {
+            articleMeta.section && <meta property="article:section" content={articleMeta.section} />
+          }
+          {
+            articleMeta.tags?.map((tag) => <meta property="article:tag" content={tag} />)
+          }
+        </>
+      )
+    }
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteImage} />
+
+    <JsonLd data={pageSchema} />
+
+    <script is:inline>
+      (function () {
+        document.documentElement.classList.add('js');
+
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          var theme = stored === 'dark' || stored === 'light' ? stored : prefers;
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <Header />
+      <main class="content">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <script is:inline>
+      (function () {
+        if (!('IntersectionObserver' in window)) {
+          document.querySelectorAll('.section').forEach(function (el) {
+            el.classList.add('visible');
+          });
+          return;
+        }
+
+        var sections = document.querySelectorAll('.section');
+        if (sections.length === 0) return;
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        sections.forEach(function (el) {
+          observer.observe(el);
+        });
+      })();
+    </script>
+  </body>
+</html>

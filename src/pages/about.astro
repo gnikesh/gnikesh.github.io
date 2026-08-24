@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EducationTimeline from '../components/EducationTimeline.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import { site } from '../data/site';
+import { publications } from '../data/publications';
+import { skills } from '../data/experience';
+import { personSchema } from '../lib/seo';
+
+function boldOwnName(authors: string): { bold: string; rest: string } {
+  const parts = authors.split(', ').filter(Boolean);
+  const bold = parts.slice(0, 2).join(', ');
+  const rest = parts.slice(2).join(', ');
+  return { bold, rest };
+}
+---
+
+<BaseLayout title="About" description={`About ${site.author.name} - ${site.author.title}.`} schema={personSchema()}>
+  <section class="section">
+    <h2 class="section-title">About Me</h2>
+    <div class="section-body">
+      <p>
+        I am a Postdoctoral Fellow in the Department of Plant Pathology at Kansas State University, where I recently
+        completed my Ph.D. in Computer Science. My current work focuses on building foundational Large Language Models
+        (LLMs) for fungal genomes, using large-scale genomic sequence data and scalable HPC training pipelines.
+      </p>
+      <p>
+        My Ph.D. research focused on stance detection - developing advanced NLP models, especially transformer-based and
+        Large Language Models (LLMs) - to analyze and classify opinions on contentious topics, with applications in
+        social media analysis and public opinion tracking.
+      </p>
+      <p>
+        <a class="btn btn--primary" href={site.resume} download="nikesh_gyawali_resume.pdf">Download resume (PDF)</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <EducationTimeline />
+  </section>
+
+  <section class="section">
+    <ExperienceTimeline detailed />
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Publications</h2>
+    <div class="publications">
+      <ol class="bibliography">
+        {
+          publications.map((pub) => {
+            const name = boldOwnName(pub.authors);
+            return (
+              <li>
+                <div class="pub-content">
+                  <div class="title">
+                    {pub.url ? <a href={pub.url} target="_blank" rel="noopener noreferrer">{pub.title}</a> : pub.title}
+                  </div>
+                  <div class="author"><strong>{name.bold}</strong>{name.rest ? `, ${name.rest}` : ''}</div>
+                  <div class="periodical"><em><strong>{pub.venue}</strong></em>, {pub.date}</div>
+                  {pub.note && <div class="note">{pub.note}</div>}
+                  {pub.url && <div class="links"><a href={pub.url} target="_blank" rel="noopener noreferrer">Paper</a></div>}
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Technical Skills</h2>
+    <div class="section-body">
+      {
+        skills.map((group) => (
+          <div class="skill-group">
+            <h3 class="skill-group-title">{group.title}</h3>
+            <div class="skill-group-chips">
+              {group.items.map((item) => (
+                <span class="chip">{item}</span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .skill-group {
+    margin-bottom: 18px;
+  }
+
+  .skill-group-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+
+  .skill-group-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>

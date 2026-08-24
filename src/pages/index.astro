@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import { site } from '../data/site';
+import { personSchema } from '../lib/seo';
+---
+
+<BaseLayout schema={personSchema()}>
+  <div class="home-grid">
+    <div class="home-profile">
+      <Hero />
+    </div>
+
+    <section class="section">
+      <h2 class="section-title">About Me</h2>
+      <div class="section-body">
+        <p>
+          Hello! I am <strong>{site.author.name}</strong>, a {site.author.title.toLocaleLowerCase()} at Kansas State
+          University with a deep passion for research, programming, algorithms, and solving complex problems. I recently
+          completed my Ph.D. in Computer Science, where I worked primarily on {`"`}stance detection{`"`} - developing
+          advanced NLP models, especially transformer-based and Large Language Models (LLMs) - to analyze and classify
+          opinions on contentious topics such as gun control, social media analysis, and public opinion tracking.
+        </p>
+        <p>
+          As a postdoctoral fellow in the Department of Plant Pathology, I now focus on building foundational language
+          models for fungal genomes while continuing to apply machine learning and AI across bioinformatics,
+          transportation safety, and NLP.
+        </p>
+        <p>
+          <strong><a href={site.resume} download="nikesh_gyawali_resume.pdf">Download resume (PDF)</a></strong>
+        </p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .home-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  :global(.home-profile .profile-hero) {
+    padding-top: 0;
+  }
+
+  @media (max-width: 760px) {
+    .home-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+</style>

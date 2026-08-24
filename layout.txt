@@ -1,0 +1,82 @@
+gnikesh/
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+│
+├── public/
+│   ├── favicon.svg
+│   ├── robots.txt
+│   ├── site.webmanifest
+│   │
+│   ├── images/
+│   │   ├── profile/
+│   │   │   └── avatar.webp
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── project-1.webp
+│   │   │   └── project-2.webp
+│   │   │
+│   │   └── blog/
+│   │       ├── post-1/
+│   │       │   └── cover.webp
+│   │       └── post-2/
+│   │           └── cover.webp
+│   │
+│   └── files/
+│       └── resume.pdf
+│
+├── src/
+│   │
+│   ├── components/
+│   │   ├── Header.astro
+│   │   ├── Navigation.astro
+│   │   ├── Footer.astro
+│   │   ├── ThemeToggle.astro
+│   │   │
+│   │   ├── Hero.astro
+│   │   ├── ProjectCard.astro
+│   │   ├── BlogCard.astro
+│   │   ├── SocialLinks.astro
+│   │   └── TagList.astro
+│   │
+│   ├── layouts/
+│   │   ├── BaseLayout.astro
+│   │   └── BlogPostLayout.astro
+│   │
+│   ├── pages/
+│   │   ├── index.astro
+│   │   ├── about.astro
+│   │   ├── projects.astro
+│   │   ├── contact.astro
+│   │   ├── 404.astro
+│   │   │
+│   │   └── blog/
+│   │       ├── index.astro
+│   │       └── [...slug].astro
+│   │
+│   ├── content/
+│   │   └── blog/
+│   │       ├── first-post.md
+│   │       └── another-post.md
+│   │
+│   ├── data/
+│   │   ├── site.ts
+│   │   ├── navigation.ts
+│   │   └── projects.ts
+│   │
+│   ├── styles/
+│   │   ├── global.css
+│   │   ├── variables.css
+│   │   └── markdown.css
+│   │
+│   └── utils/
+│       ├── formatDate.ts
+│       └── formatReadingTime.ts
+│
+├── astro.config.mjs
+├── package.json
+├── tsconfig.json
+├── .gitignore
+├── README.md
+└── LICENSE

@@ -1,0 +1,88 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-item">
+  <h3 class="project-title">
+    {
+      project.link ? (
+        <a href={project.link} target="_blank" rel="noopener noreferrer">{project.title}</a>
+      ) : (
+        project.title
+      )
+    }
+  </h3>
+  <p class="project-sub">{project.subtitle} <span class="project-period">{project.period}</span></p>
+  <p class="project-summary">{project.description}</p>
+  {
+    project.highlights.length > 0 && (
+      <ul class="project-list">
+        {project.highlights.map((h) => (
+          <li>{h}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .project-item {
+    padding: 6px 0;
+  }
+
+  .project-title {
+    display: inline-block;
+    margin: 0 0 2px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .project-title a {
+    color: var(--accent);
+  }
+
+  .project-title a:hover {
+    text-decoration: underline;
+  }
+
+  .project-sub {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .project-period {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .project-summary {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .project-list {
+    margin: 6px 0 0;
+    padding-left: 1.1rem;
+  }
+
+  .project-list li {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .project-list li::marker {
+    color: var(--marker);
+  }
+</style>

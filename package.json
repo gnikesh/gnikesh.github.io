@@ -1,0 +1,23 @@
+{
+  "name": "gnikesh",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal website and blog of Nikesh Gyawali",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
+  }
+}

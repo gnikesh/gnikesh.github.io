@@ -1,0 +1,22 @@
+---
+import { site } from '../data/site';
+import SocialLinks from './SocialLinks.astro';
+---
+
+<section class="profile-hero">
+  <a class="image avatar" href="/" aria-label={site.author.name}>
+    <img
+      src="/images/profile/avatar.webp"
+      alt={site.author.name}
+      width="512"
+      height="512"
+      fetchpriority="high"
+    />
+  </a>
+
+  <h1 class="site-name">{site.author.name}</h1>
+
+  <div class="socials">
+    <SocialLinks size={18} />
+  </div>
+</section>

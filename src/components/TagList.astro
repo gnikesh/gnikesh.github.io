@@ -1,0 +1,31 @@
+---
+import { tagUrl } from '../lib/tags';
+
+interface Props {
+  tags: string[];
+  accent?: boolean;
+}
+
+const { tags = [], accent = false } = Astro.props;
+---
+
+<ul class="tags" aria-label="Tags">
+  {
+    tags.map((tag) => (
+      <li>
+        <a class:list={['chip tag-link', { 'chip--accent': accent }]} href={tagUrl(tag)}>{tag}</a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+  }
+</style>

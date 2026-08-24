@@ -1,0 +1,111 @@
+---
+import { navigation } from '../data/navigation';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+function isActive(href: string): boolean {
+  if (href === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(href);
+}
+---
+
+<nav class="nav" aria-label="Primary">
+  <ul class="nav-list">
+    {
+      navigation.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={['nav-link', { 'nav-link--active': isActive(item.href) }]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .nav-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color var(--transition), background-color var(--transition);
+  }
+
+  .nav-link:hover {
+    color: var(--accent);
+    background: var(--bg-muted);
+    filter: none;
+  }
+
+  .nav-link--active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  @media (max-width: 760px) {
+    .nav-list {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+      padding: 0.75rem 1.25rem 1rem;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .nav-list--open {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 0.7rem 0.8rem;
+      border-radius: var(--radius-sm);
+    }
+  }
+</style>
+
+<script>
+  const menuButton = document.querySelector('[data-menu-button]') as HTMLButtonElement | null;
+  const list = document.querySelector('.nav-list') as HTMLElement | null;
+
+  if (menuButton && list) {
+    menuButton.addEventListener('click', () => {
+      const open = list.classList.toggle('nav-list--open');
+      menuButton.setAttribute('aria-expanded', String(open));
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!menuButton.contains(event.target as Node) && !list.contains(event.target as Node)) {
+        list.classList.remove('nav-list--open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>

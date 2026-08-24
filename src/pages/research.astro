@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+
+const areas = [
+  {
+    title: 'Large Language Models & Foundation Models for Genomics',
+    description:
+      'Pre-training large-scale transformer-based language models for fungal genomes. I am currently pre-training a foundational LLM with up to 1.3B parameters on large-scale genomic sequence data, and building scalable HPC/ACCESS training pipelines for genome-scale data processing and model optimization. This work builds on FunBERT, a Transformer model I pre-trained from scratch on fungal genomic sequences.',
+  },
+  {
+    title: 'Stance Detection Enhanced by Large Language Models',
+    description:
+      'Using LLMs to detect and classify stances across socially and economically important domains - gun control debates, vaccine discourse on social media, and financial text (SEC 10-K filings and earnings call transcripts). I combine semi-supervised learning with LLM-generated pseudo-labels, RAG, prompt engineering, and RLHF to improve label quality and reduce reliance on expensive manual annotation.',
+  },
+  {
+    title: 'Explainable & Applied Machine Learning',
+    description:
+      'Applying scalable, interpretable machine learning to real-world problems beyond text, including vehicle crash severity prediction using ensemble and Transformer-based models with SHAP-based explainability, and time series anomaly detection for security auditing of medical emergency access (break-the-glass) systems.',
+  },
+];
+
+const projects = [
+  {
+    title: 'FunBERT: Pre-training and Fine-Tuning Transformers for Genomic Insights',
+    sub: 'Deep Learning + Bioinformatics',
+    summary:
+      'Developed a custom foundation model for fungal genomes based on the Transformer architecture, enabling genomic sequence analysis and classification in fungal DNA.',
+    items: [
+      'Pre-trained the model from scratch and fine-tuned it for downstream tasks while ensuring scalability for large-scale genomic data processing.',
+      'Achieved over 97% accuracy in DNA sequence classification, demonstrating the model\u2019s effectiveness in genomic analysis.',
+    ],
+    links: [],
+  },
+  {
+    title: 'Optimizing Financial Report Analysis with LLMs and Semi-supervised Learning',
+    sub: 'NLP + Large Language Models',
+    summary:
+      'Leveraged LLMs as data annotators using prompt engineering and a RAG system in semi-supervised learning to improve label quality and reduce reliance on manually labeled data for analyzing quarterly earnings call reports for a private company.',
+    items: [
+      'Fine-tuned BERT-based models for stance detection using LLM-generated pseudo-labels to enhance financial sentiment analysis in earnings call transcripts.',
+      'Achieved average model accuracy over 85%.',
+    ],
+    links: [{ label: 'Code', href: 'https://github.com/gnikesh/llm-financial-stance' }],
+  },
+  {
+    title: 'AI-Driven Social Media Analysis for Vaccine Sentiment',
+    sub: 'Social Media + NLP',
+    summary:
+      'Analyzed ten years (2013-2022) of social media data using LLMs and NLP techniques, including lexicon-based analysis and topic modeling, to examine sentiment, stance, and trends related to vaccines.',
+    items: [
+      'Implemented large-scale data crawling pipelines and conducted temporal, geospatial, and statistical analysis.',
+      'Published in PLOS ONE; dataset and code released openly.',
+    ],
+    links: [
+      { label: 'Paper', href: 'https://doi.org/10.1371/journal.pone.0337911' },
+      { label: 'Dataset', href: 'https://github.com/gnikesh/vaccine-dataset' },
+    ],
+  },
+  {
+    title: 'Commercial Motor Vehicle Crash Severity Prediction',
+    sub: 'Machine Learning + Transportation Safety',
+    summary:
+      'Developed and optimized machine learning models (Random Forest, CatBoost, XGBoost, Gradient Boosting, and Transformer-based models) for crash injury severity classification.',
+    items: [
+      'Designed and implemented a scalable ML pipeline for data preprocessing, feature engineering, and model training on large-scale tabular datasets.',
+      'Enhanced model interpretability and explainability using the SHAP framework, providing insights into feature importance and decision-making.',
+    ],
+    links: [{ label: 'Paper', href: 'https://doi.org/10.1080/19439962.2025.2540388' }],
+  },
+  {
+    title: 'Time Series Anomaly Detection in Medical Break-the-Glass',
+    sub: 'Machine Learning + Healthcare Security',
+    summary:
+      'Implemented anomaly detection models (Gaussian Mixture Model) to identify anomalous user sessions during medical emergency access (break-the-glass) events.',
+    items: [
+      'Developed a two-tiered prediction system: a real-time fast analysis engine and a post-hoc detailed statistical evaluation model.',
+      'Applied statistical modeling techniques to calculate likelihood scores for session anomalies, improving post-event auditing and security enforcement.',
+    ],
+    links: [{ label: 'Paper', href: 'https://dl.acm.org/doi/abs/10.1145/3384217.3386397' }],
+  },
+];
+---
+
+<BaseLayout
+  title="Research"
+  description={`Research interests and selected work of ${site.author.name}.`}
+>
+  <section class="section">
+    <h2 class="section-title">Research</h2>
+    <div class="section-body">
+      <p>
+        I am a Postdoctoral Fellow in the Department of Plant Pathology at Kansas State University, where I recently
+        completed my Ph.D. in Computer Science. My current work focuses on {`"`}teaching{`"`} machines the language of
+        life: pre-training large-scale language models on genomic sequences to build foundation models for fungal
+        genomes, with scalable HPC pipelines for genome-scale data processing.
+      </p>
+      <p>
+        My Ph.D. research centered on <strong>stance detection enhanced by large language models</strong> - using LLMs
+        and hybrid semi-supervised methods to automatically identify and classify opinions on contentious issues, from
+        gun regulation and vaccines to financial reports. Throughout, I focus on building robust, explainable, and
+        practical systems that combine the power of large models with real-world constraints.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Research Areas</h2>
+    <div class="section-body">
+      {
+        areas.map((area, i) => (
+          <div class="area-item">
+            <div class="area-item__head">
+              <span class="area-item__index">{String(i + 1).padStart(2, '0')}</span>
+              <span class="area-item__title">{area.title}</span>
+            </div>
+            <p class="area-item__desc">{area.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Selected Projects</h2>
+    <div class="section-body">
+      {
+        projects.map((project) => (
+          <article class="project-item">
+            <h3 class="project-title">{project.title}</h3>
+            <p class="project-sub">{project.sub}</p>
+            <p class="project-summary">{project.summary}</p>
+            <ul class="project-list">
+              {project.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            {
+              project.links.length > 0 && (
+                <div class="project-links">
+                  {project.links.map((link) => (
+                    <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                  ))}
+                </div>
+              )
+            }
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Resources</h2>
+    <div class="section-body">
+      <p>
+        <a href={site.social.scholar} target="_blank" rel="noopener noreferrer">Google Scholar</a> - all publications
+        and citations
+      </p>
+      <p>
+        <a href={site.social.github} target="_blank" rel="noopener noreferrer">GitHub</a> - code and datasets for my
+        projects
+      </p>
+      <p>
+        <a href="/about">About</a> - full list of publications, experience, and skills
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .area-item {
+    padding: 14px 0 18px;
+    border-left: 3px solid var(--accent);
+    padding-left: 18px;
+  }
+
+  .area-item__head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .area-item__index {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .area-item__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .area-item + .area-item {
+    margin-top: 4px;
+  }
+
+  .area-item__desc {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .project-item {
+    padding: 4px 0;
+  }
+
+  .project-title {
+    margin: 0 0 4px;
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .project-sub {
+    margin: 0 0 8px;
+    font-size: 13.5px;
+    color: var(--accent);
+  }
+
+  .project-summary {
+    margin: 0 0 8px;
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .project-list {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .project-list li {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .project-list li::marker {
+    color: var(--marker);
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .project-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .project-links a:hover {
+    text-decoration: underline;
+  }
+</style>

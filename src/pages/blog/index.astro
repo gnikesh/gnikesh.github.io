@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import { tagUrl } from '../../lib/tags';
+import { site } from '../../data/site';
+import { absoluteUrl, breadcrumbSchema, type Schema } from '../../lib/seo';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b));
+
+const schema: Schema[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    '@id': `${site.url}/blog#blog`,
+    mainEntityOfPage: absoluteUrl('/blog'),
+    name: 'Blog',
+    description: 'Writing about machine learning, NLP, programming, and the occasional book or life thought.',
+    inLanguage: 'en-US',
+    author: { '@id': `${site.url}/#person` },
+    blogPost: posts.map((post) => ({
+      '@type': 'BlogPosting',
+      headline: post.data.title,
+      description: post.data.description,
+      url: absoluteUrl(`/blog/${post.id}`),
+      datePublished: post.data.pubDate.toISOString(),
+    })),
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: site.url },
+    { name: 'Blog', url: absoluteUrl('/blog') },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Blog"
+  description="Writing about machine learning, programming, and more by Nikesh Gyawali."
+  schema={schema}
+>
+  <section class="section">
+    <h2 class="section-title">Posts</h2>
+    <div class="section-body">
+      <p>Writing about machine learning, NLP, programming, and the occasional book or life thought.</p>
+      <div class="tag-row">
+        {
+          allTags.map((tag) => (
+            <a class="chip tag-link" href={tagUrl(tag)}>{tag}</a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-body">
+      {
+        posts.map((post) => (
+          <BlogCard post={post} />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+</style>

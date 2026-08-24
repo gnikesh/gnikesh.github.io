@@ -1,0 +1,56 @@
+---
+import { experience } from '../data/experience';
+
+interface Props {
+  showTitle?: boolean;
+  limit?: number;
+  detailed?: boolean;
+}
+
+const { showTitle = true, limit, detailed = false } = Astro.props;
+const items = limit ? experience.slice(0, limit) : experience;
+---
+
+{
+  showTitle && <h2 class="section-title">Experience</h2>
+}
+
+{
+  items.map((job) => (
+    <div class="card timeline-item">
+      <div class="experience-item">
+        <div class="experience-content">
+          <p class="exp-title"><strong>{job.title}</strong></p>
+          <p class="exp-detail">{job.org}, <em>{job.location}</em></p>
+          <p class="exp-period">{job.period}</p>
+          {
+            detailed && job.items.length > 0 && (
+              <ul class="exp-list">
+                {job.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  ))
+}
+
+<style>
+  .exp-list {
+    margin: 8px 0 0;
+    padding-left: 1.1rem;
+  }
+
+  .exp-list li {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .exp-list li::marker {
+    color: var(--marker);
+  }
+</style>

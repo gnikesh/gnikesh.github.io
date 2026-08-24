@@ -1,0 +1,17 @@
+{
+  "name": "Nikesh Gyawali",
+  "short_name": "gnikesh",
+  "description": "Personal website and blog of Nikesh Gyawali - Ph.D. candidate in Computer Science at Kansas State University.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f7",
+  "theme_color": "#c2714f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
