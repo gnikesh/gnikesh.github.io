@@ -3,108 +3,217 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EducationTimeline from '../components/EducationTimeline.astro';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import { site } from '../data/site';
-import { publications } from '../data/publications';
 import { skills } from '../data/experience';
 import { personSchema } from '../lib/seo';
-
-function boldOwnName(authors: string): { bold: string; rest: string } {
-  const parts = authors.split(', ').filter(Boolean);
-  const bold = parts.slice(0, 2).join(', ');
-  const rest = parts.slice(2).join(', ');
-  return { bold, rest };
-}
 ---
 
-<BaseLayout title="About" description={`About ${site.author.name} - ${site.author.title}.`} schema={personSchema()}>
-  <section class="section">
-    <h2 class="section-title">About Me</h2>
-    <div class="section-body">
-      <p>
-        I am a Postdoctoral Fellow in the Department of Plant Pathology at Kansas State University, where I recently
-        completed my Ph.D. in Computer Science. My current work focuses on building foundational Large Language Models
-        (LLMs) for fungal genomes, using large-scale genomic sequence data and scalable HPC training pipelines.
+<BaseLayout
+  title="About"
+  description="Nikesh Gyawali, computer scientist, researcher, and builder at Kansas State University."
+  schema={personSchema()}
+>
+  <div class="about-intro">
+    <header class="page-heading">
+      <span class="eyebrow">A little about me</span><h1>Hi, I'm Nikesh.</h1><p>
+        Computer scientist. Researcher. Builder.<br />Curious about how things
+        work, and what we can make them do.
       </p>
-      <p>
-        My Ph.D. research focused on stance detection - developing advanced NLP models, especially transformer-based and
-        Large Language Models (LLMs) - to analyze and classify opinions on contentious topics, with applications in
-        social media analysis and public opinion tracking.
+    </header>
+    <img
+      src="/images/profile/avatar.webp"
+      alt="Nikesh Gyawali"
+      width="240"
+      height="240"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="about-body">
+    <section class="section section-rule">
+      <h2 class="section-title">From words to genomes.</h2><div
+        class="section-body"
+      >
+        <p>
+          I'm interested in what machines can learn from sequences. During my
+          Ph.D., those sequences were words: tweets, opinions, and financial
+          reports. These days, they're often DNA.
+        </p><p>
+          I'm a Postdoctoral Fellow in the Department of Plant Pathology at
+          Kansas State University, where I work on foundation language models
+          for fungal genomes. It's an intersection of computer science and
+          biology that keeps giving me new questions to think about.
+        </p><p>
+          Alongside research, I build software and write about what I'm
+          learning. Sometimes that's a tool for a shared GPU cluster. Sometimes
+          it's a Catan board generator that started with a weekend idea.
+        </p>
+      </div>
+    </section>
+    <section class="section section-rule">
+      <span class="eyebrow">Currently</span><h2 class="current-title">
+        Postdoctoral Fellow
+      </h2><p class="text-muted">
+        Department of Plant Pathology<br />Kansas State University, Manhattan,
+        Kansas
+      </p><p class="current-focus">
+        <span class="status">EXPLORING</span> Foundation models for fungal genomes
       </p>
-      <p>
-        <a class="btn btn--primary" href={site.resume} download="nikesh_gyawali_resume.pdf">Download resume (PDF)</a>
-      </p>
-    </div>
-  </section>
-
-  <section class="section">
-    <EducationTimeline />
-  </section>
-
-  <section class="section">
-    <ExperienceTimeline detailed />
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Publications</h2>
-    <div class="publications">
-      <ol class="bibliography">
-        {
-          publications.map((pub) => {
-            const name = boldOwnName(pub.authors);
-            return (
-              <li>
-                <div class="pub-content">
-                  <div class="title">
-                    {pub.url ? <a href={pub.url} target="_blank" rel="noopener noreferrer">{pub.title}</a> : pub.title}
+    </section>
+    <section class="section section-rule"><EducationTimeline /></section>
+    <section class="section section-rule">
+      <h2 class="section-title">The path here</h2><p class="career-intro">
+        From software and security analytics in Kathmandu to machine learning
+        research in Kansas. Each stop has shaped how I approach the next
+        problem.
+      </p><details class="background-details">
+        <summary
+          >Research, teaching & industry experience <span aria-hidden="true"
+            >+</span
+          ></summary
+        ><ExperienceTimeline showTitle={false} detailed />
+      </details><details class="background-details">
+        <summary>Tools I work with <span aria-hidden="true">+</span></summary
+        ><div class="skill-groups">
+          {
+            skills.map((group) => (
+              <div>
+                <>
+                  <h3>{group.title}</h3>
+                  <div class="skill-chips">
+                    {group.items.map((item) => (
+                      <span class="chip">{item}</span>
+                    ))}
                   </div>
-                  <div class="author"><strong>{name.bold}</strong>{name.rest ? `, ${name.rest}` : ''}</div>
-                  <div class="periodical"><em><strong>{pub.venue}</strong></em>, {pub.date}</div>
-                  {pub.note && <div class="note">{pub.note}</div>}
-                  {pub.url && <div class="links"><a href={pub.url} target="_blank" rel="noopener noreferrer">Paper</a></div>}
-                </div>
-              </li>
-            );
-          })
-        }
-      </ol>
+                </>
+              </div>
+            ))
+          }
+        </div>
+      </details>
+    </section>
+    <div class="link-row">
+      <a
+        class="btn btn--primary"
+        href={site.resume}
+        download="nikesh_gyawali_resume.pdf">Download CV ↗</a
+      ><a
+        class="btn"
+        href={site.social.github}
+        target="_blank"
+        rel="noopener noreferrer">GitHub ↗</a
+      ><a
+        class="btn"
+        href={site.social.scholar}
+        target="_blank"
+        rel="noopener noreferrer">Google Scholar ↗</a
+      ><a
+        class="btn"
+        href={site.social.linkedin}
+        target="_blank"
+        rel="noopener noreferrer">LinkedIn ↗</a
+      >
     </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Technical Skills</h2>
-    <div class="section-body">
-      {
-        skills.map((group) => (
-          <div class="skill-group">
-            <h3 class="skill-group-title">{group.title}</h3>
-            <div class="skill-group-chips">
-              {group.items.map((item) => (
-                <span class="chip">{item}</span>
-              ))}
-            </div>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+    <p class="about-contact">
+      Have a question or an idea? <a href="/contact">Let's talk ↗</a>
+    </p>
+  </div>
 </BaseLayout>
-
 <style>
-  .skill-group {
-    margin-bottom: 18px;
+  .about-intro {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 48px;
+    align-items: start;
+    margin-bottom: 24px;
   }
-
-  .skill-group-title {
-    font-size: 14px;
-    font-weight: 600;
+  .about-intro img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 16px;
+  }
+  .about-body {
+    max-width: 760px;
+  }
+  .section-body p {
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin-bottom: 8px;
   }
-
-  .skill-group-chips {
+  .current-title {
+    font-size: 27px;
+    margin: 20px 0 12px;
+  }
+  .current-focus {
+    margin-top: 24px;
     display: flex;
+    gap: 16px;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .career-intro {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .background-details {
+    border-top: 1px solid var(--border);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    cursor: pointer;
+    padding: 20px 0;
+    font-size: 14px;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary span {
+    color: var(--accent);
+  }
+  details[open] summary span {
+    transform: rotate(45deg);
+  }
+  .skill-groups {
+    padding: 8px 0 24px;
+    display: grid;
+    gap: 24px;
+  }
+  .skill-groups h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .skill-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .about-contact {
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  @media (max-width: 640px) {
+    .link-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .link-row .btn {
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+    .about-intro {
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-bottom: 32px;
+    }
+    .about-intro img {
+      width: 120px;
+      height: 120px;
+      margin-top: 0;
+    }
   }
 </style>

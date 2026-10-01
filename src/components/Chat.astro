@@ -1,0 +1,352 @@
+---
+import { getCollection } from 'astro:content';
+import { buildPreparedAnswers } from '../data/chat';
+const endpoint = import.meta.env.PUBLIC_CHAT_ENDPOINT || '';
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const prepared = JSON.stringify(buildPreparedAnswers(posts)).replaceAll(
+  '<',
+  '\\u003c',
+);
+const suggestions = [
+  { label: 'Your research', question: 'What do you work on?' },
+  { label: 'FunDLM', question: 'Tell me about FunDLM' },
+  { label: 'Projects', question: 'Show me your projects' },
+  { label: 'Latest writing', question: 'What have you written?' },
+];
+---
+
+<section
+  class="chat"
+  id="nikesh-ai"
+  aria-labelledby="chat-title"
+  data-chat
+  data-endpoint={endpoint}
+>
+  <script
+    is:inline
+    type="application/json"
+    data-chat-answers
+    set:html={prepared}
+  />
+  <header class="chat__header">
+    <div class="chat__identity">
+      <svg
+        class="chat__symbol"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        ><path
+          d="M12 2l2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8L12 2Z"
+          stroke="currentColor"
+          stroke-width="1.5"></path><path
+          d="M12 8v8M8 12h8"
+          stroke="currentColor"></path></svg
+      >
+      <h2 id="chat-title">NIKESH AI</h2>
+    </div>
+    <div class="chat__controls">
+      <button class="chat__reset" type="button" data-chat-reset hidden
+        >New conversation</button
+      >
+      <span class="status" data-chat-status role="status">READY</span>
+    </div>
+  </header>
+  <div class="chat__welcome" data-chat-welcome>
+    <p class="chat__greeting">A little curious? Start here.</p>
+    <p>Ask about my research, projects, writing, or the person behind them.</p>
+  </div>
+  <div
+    class="chat__messages"
+    data-chat-messages
+    role="log"
+    aria-label="Conversation with Nikesh AI"
+    aria-live="polite"
+    tabindex="0"
+    hidden
+  >
+  </div>
+  <div class="chat__error" data-chat-error role="alert" hidden>
+    <p data-chat-error-text>Couldn't connect. Please try again in a moment.</p>
+    <button type="button" data-chat-retry>Try again ↗</button>
+  </div>
+  <form class="chat__form" data-chat-form>
+    <label class="sr-only" for="chat-input">Your message to Nikesh AI</label>
+    <textarea
+      id="chat-input"
+      name="message"
+      rows="1"
+      maxlength="2000"
+      placeholder="What would you like to know?"
+      required
+      disabled></textarea>
+    <button class="chat__send" type="submit" aria-label="Send message" disabled
+      ><svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"></path></svg
+      ></button
+    >
+  </form>
+  <div class="chat__suggestions" data-chat-suggestions>
+    <span>Try asking</span>
+    {
+      suggestions.map(({ label, question }) => (
+        <button type="button" data-chat-prompt={question} disabled>
+          {label} <span aria-hidden="true">↗</span>
+        </button>
+      ))
+    }
+  </div>
+  <noscript
+    ><p class="chat__noscript">
+      Enable JavaScript to chat, or explore my <a href="/research">research</a> and
+      <a href="/projects">projects</a>.
+    </p></noscript
+  >
+</section>
+<script>
+  import { initializeChat } from '../lib/chat';
+  document.querySelectorAll<HTMLElement>('[data-chat]').forEach(initializeChat);
+</script>
+<style>
+  .chat {
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-md);
+    padding: 20px 28px;
+    scroll-margin-top: 112px;
+  }
+  .chat__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .chat__identity,
+  .chat__controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .chat__identity h2 {
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .chat__symbol {
+    color: var(--accent);
+  }
+  .chat__reset {
+    padding: 8px;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+  .chat__reset:hover {
+    color: var(--accent);
+  }
+  .chat__welcome {
+    padding: 24px 0 20px;
+  }
+  .chat__greeting {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    margin-bottom: 6px;
+  }
+  .chat__welcome p + p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .chat__form {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 10px 10px 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+  }
+  .chat__form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  textarea {
+    width: 100%;
+    min-width: 0;
+    resize: none;
+    max-height: 144px;
+    min-height: 44px;
+    padding: 11px 0;
+    color: var(--text);
+    border: 0;
+    background: transparent;
+    font-size: 13px;
+    line-height: 22px;
+    outline: 0;
+  }
+  textarea::placeholder {
+    color: var(--text-faint);
+  }
+  .chat__send {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 6px;
+    color: var(--accent-contrast);
+    background: var(--accent);
+  }
+  .chat__send:hover {
+    background: var(--accent-strong);
+  }
+  .chat__send:disabled {
+    opacity: 0.5;
+  }
+  .chat__suggestions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .chat__suggestions > span {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-right: 4px;
+    font-family: var(--font-mono);
+  }
+  .chat__suggestions button {
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .chat__suggestions button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .chat__messages {
+    max-height: 360px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 24px 4px 16px;
+    font-size: 14px;
+  }
+  .chat__messages :global(.message) {
+    padding-bottom: 24px;
+  }
+  .chat__messages :global(.message__label) {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+  .chat__messages :global(.message--user .message__label) {
+    color: var(--text-faint);
+  }
+  .chat__messages :global(.message__text) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .chat__messages :global(.message__sources) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .chat__messages :global(.message__sources a) {
+    font-size: 11px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    min-height: 36px;
+  }
+  .chat__error {
+    margin: 20px 0;
+    border-left: 2px solid var(--danger);
+    padding-left: 12px;
+    font-size: 12px;
+  }
+  .chat__error p {
+    color: var(--text-muted);
+  }
+  .chat__error button {
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    padding: 8px 0;
+    min-height: 36px;
+    font-size: 12px;
+  }
+  .chat__noscript {
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  [data-state='error'] .status::before {
+    background: var(--danger);
+  }
+  [data-state='busy'] .status::before {
+    background: var(--accent);
+  }
+  @media (max-width: 640px) {
+    .chat {
+      padding: 20px;
+    }
+    .chat__greeting {
+      font-size: 21px;
+    }
+    .chat__welcome {
+      padding: 24px 0;
+    }
+    .chat__suggestions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .chat__suggestions > span {
+      grid-column: 1 / -1;
+    }
+    .chat__suggestions button {
+      min-height: 44px;
+      justify-content: space-between;
+    }
+    .chat__controls {
+      gap: 4px;
+    }
+    .chat__reset {
+      font-size: 10px;
+      max-width: 84px;
+      line-height: 1.4;
+    }
+    textarea {
+      font-size: 16px;
+    }
+  }
+</style>

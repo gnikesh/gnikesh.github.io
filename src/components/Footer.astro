@@ -1,7 +1,117 @@
 ---
 import { site } from '../data/site';
+const links = [
+  ['GitHub', site.social.github],
+  ['Google Scholar', site.social.scholar],
+  ['LinkedIn', site.social.linkedin],
+  ['Get in touch', '/contact'],
+];
 ---
 
 <footer class="site-footer">
-  <p>&copy; {new Date().getFullYear()} {site.author.name}. All rights reserved.</p>
+  <div class="footer-connect">
+    <div>
+      <span class="eyebrow">Let's connect</span><h2>
+        Good work starts with a conversation.
+      </h2>
+    </div>
+    <div class="footer-links">
+      {
+        links.map(([label, href]) => (
+          <a
+            href={href}
+            target={href.startsWith('https') ? '_blank' : undefined}
+            rel={href.startsWith('https') ? 'noopener noreferrer' : undefined}
+          >
+            {label} <span aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <a class="footer-brand" href="/">GNIKESH.</a>
+    <span class="status">WORKSPACE ONLINE</span>
+    <span class="footer-copyright"
+      >© {new Date().getFullYear()} {site.author.name}</span
+    >
+  </div>
 </footer>
+<style>
+  .site-footer {
+    width: 100%;
+    max-width: var(--wrapper-max);
+    margin: 0 auto;
+    padding: 0 32px 28px;
+  }
+  .footer-connect {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+  .footer-connect h2 {
+    margin-top: 12px;
+    font-size: 22px;
+  }
+  .footer-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 32px;
+  }
+  .footer-links a {
+    font-size: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--text-muted);
+  }
+  .footer-links a:hover {
+    color: var(--accent);
+  }
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .footer-brand {
+    font-weight: 800;
+    letter-spacing: -0.06em;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .footer-copyright {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-left: auto;
+  }
+  @media (max-width: 760px) {
+    .footer-connect {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .footer-links {
+      max-width: 400px;
+    }
+  }
+  @media (max-width: 640px) {
+    .site-footer {
+      padding: 0 20px 24px;
+    }
+    .footer-bottom {
+      gap: 16px;
+    }
+    .footer-copyright {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+</style>
