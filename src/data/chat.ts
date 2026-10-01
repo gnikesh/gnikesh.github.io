@@ -202,10 +202,7 @@ export function buildPreparedAnswers(
       sources: [
         { title: 'Read the notebook', url: '/blog' },
         ...posts.slice(0, 2).map((post) => ({
-          title:
-            post.id === 'catan-map-generator'
-              ? 'Catan Board Generator'
-              : 'Dockerized microservices',
+          title: post.data.title.split(':')[0],
           url: `/blog/${post.id}`,
         })),
       ],
