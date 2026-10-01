@@ -8,7 +8,7 @@ export const site = {
   },
   url: 'https://gnikesh.github.io',
   description:
-    'Personal website and blog of Nikesh Gyawali - Postdoctoral Fellow at Kansas State University working on large language models, NLP, and machine learning.',
+    'The personal workspace of Nikesh Gyawali. Research, projects, and notes on AI, language models, and computational biology at Kansas State University.',
   ogImage: '/images/profile/avatar.webp',
   social: {
     scholar: 'https://scholar.google.com/citations?user=zRT3h8kAAAAJ&hl=en',

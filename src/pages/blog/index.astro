@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import { getCollection } from 'astro:content';
-import { tagUrl } from '../../lib/tags';
+import { blogTopics, topicsForPost } from '../../lib/blog';
 import { site } from '../../data/site';
 import { absoluteUrl, breadcrumbSchema, type Schema } from '../../lib/seo';
 
@@ -10,7 +10,9 @@ const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b));
+const years = [
+  ...new Set(posts.map((post) => post.data.pubDate.getUTCFullYear())),
+];
 
 const schema: Schema[] = [
   {
@@ -19,7 +21,8 @@ const schema: Schema[] = [
     '@id': `${site.url}/blog#blog`,
     mainEntityOfPage: absoluteUrl('/blog'),
     name: 'Blog',
-    description: 'Writing about machine learning, NLP, programming, and the occasional book or life thought.',
+    description:
+      'Writing about machine learning, NLP, programming, and the occasional book or life thought.',
     inLanguage: 'en-US',
     author: { '@id': `${site.url}/#person` },
     blogPost: posts.map((post) => ({
@@ -42,36 +45,162 @@ const schema: Schema[] = [
   description="Writing about machine learning, programming, and more by Nikesh Gyawali."
   schema={schema}
 >
-  <section class="section">
-    <h2 class="section-title">Posts</h2>
-    <div class="section-body">
-      <p>Writing about machine learning, NLP, programming, and the occasional book or life thought.</p>
-      <div class="tag-row">
-        {
-          allTags.map((tag) => (
-            <a class="chip tag-link" href={tagUrl(tag)}>{tag}</a>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-body">
+  <header class="page-heading">
+    <span class="eyebrow">The personal notebook</span><h1>
+      Thinking out loud.
+    </h1><p>
+      Things I'm learning, building, debugging, reading, and thinking about.
+      Notes from the work, and occasionally from everything around it.
+    </p>
+  </header>
+  <div class="notebook-toolbar">
+    <div class="topic-filters" role="group" aria-label="Filter posts by topic">
       {
-        posts.map((post) => (
-          <BlogCard post={post} />
+        blogTopics.map((topic) => (
+          <button
+            type="button"
+            data-topic={topic}
+            aria-pressed={topic === 'All' ? 'true' : 'false'}
+          >
+            {topic}
+          </button>
         ))
       }
     </div>
-  </section>
+    <a class="rss-link" href="/rss.xml">RSS ↗</a>
+  </div>
+  <p class="sr-only" data-filter-status role="status"></p>
+  <div class="notebook-years">
+    {
+      years.map((year) => (
+        <section class="year-group" data-year-group>
+          <>
+            <h2 class="year-heading">{year}</h2>
+            <div class="year-posts">
+              {posts
+                .filter((post) => post.data.pubDate.getUTCFullYear() === year)
+                .map((post) => (
+                  <div
+                    data-blog-entry
+                    data-topics={topicsForPost(post).join(',')}
+                  >
+                    <BlogCard post={post} />
+                  </div>
+                ))}
+            </div>
+          </>
+        </section>
+      ))
+    }
+  </div>
 </BaseLayout>
-
+<script>
+  const filters = document.querySelectorAll<HTMLButtonElement>('[data-topic]');
+  const entries = document.querySelectorAll<HTMLElement>('[data-blog-entry]');
+  const groups = document.querySelectorAll<HTMLElement>('[data-year-group]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  function filterBy(topic: string) {
+    filters.forEach((button) =>
+      button.setAttribute(
+        'aria-pressed',
+        String(button.dataset.topic === topic),
+      ),
+    );
+    let count = 0;
+    entries.forEach((entry) => {
+      entry.hidden =
+        topic !== 'All' &&
+        !(entry.dataset.topics ?? '').split(',').includes(topic);
+      if (!entry.hidden) count++;
+    });
+    groups.forEach((group) => {
+      group.hidden = !group.querySelector('[data-blog-entry]:not([hidden])');
+    });
+    if (status)
+      status.textContent = `${count} ${count === 1 ? 'post' : 'posts'}${topic === 'All' ? '' : ` about ${topic}`}`;
+  }
+  const params = new URLSearchParams(location.search);
+  const initial = params.get('topic') ?? 'All';
+  filterBy(
+    [...filters].some((button) => button.dataset.topic === initial)
+      ? initial
+      : 'All',
+  );
+  filters.forEach((button) =>
+    button.addEventListener('click', () => {
+      const topic = button.dataset.topic ?? 'All';
+      filterBy(topic);
+      const url = new URL(location.href);
+      if (topic === 'All') url.searchParams.delete('topic');
+      else url.searchParams.set('topic', topic);
+      history.replaceState(null, '', url);
+    }),
+  );
+</script>
 <style>
-  .tag-row {
+  .notebook-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+  }
+  .topic-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px;
+    gap: 6px;
+  }
+  .topic-filters button {
+    border: 0;
+    border-radius: 4px;
+    color: var(--text-muted);
+    background: transparent;
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .topic-filters button[aria-pressed='true'] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .topic-filters button:hover {
+    color: var(--accent);
+  }
+  .rss-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .year-group {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 32px;
+    margin-top: 40px;
+  }
+  .year-heading {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-faint);
+    padding-top: 32px;
+  }
+  @media (max-width: 640px) {
+    .year-group {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .year-heading {
+      padding-top: 0;
+    }
+    .topic-filters button {
+      padding: 8px 12px;
+    }
+    .rss-link {
+      align-self: start;
+      min-height: 44px;
+    }
   }
 </style>
