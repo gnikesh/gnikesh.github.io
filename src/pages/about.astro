@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EducationTimeline from '../components/EducationTimeline.astro';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import HeadFollow from '../components/HeadFollow.astro';
 import { site } from '../data/site';
 import { skills } from '../data/experience';
 import { personSchema } from '../lib/seo';
@@ -19,13 +20,7 @@ import { personSchema } from '../lib/seo';
         work, and what we can make them do.
       </p>
     </header>
-    <img
-      src="/images/profile/avatar.webp"
-      alt="Nikesh Gyawali"
-      width="240"
-      height="240"
-      fetchpriority="high"
-    />
+    <HeadFollow size={220} priority class="about-portrait" />
   </div>
   <div class="about-body">
     <section class="section section-rule">
@@ -120,17 +115,13 @@ import { personSchema } from '../lib/seo';
 <style>
   .about-intro {
     display: grid;
-    grid-template-columns: 1fr 200px;
+    grid-template-columns: 1fr 220px;
     gap: 48px;
     align-items: start;
     margin-bottom: 24px;
   }
-  .about-intro img {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 16px;
+  .about-intro :global(.about-portrait) {
+    margin-top: 8px;
   }
   .about-body {
     max-width: 760px;
@@ -210,10 +201,10 @@ import { personSchema } from '../lib/seo';
       gap: 0;
       margin-bottom: 32px;
     }
-    .about-intro img {
-      width: 120px;
-      height: 120px;
-      margin-top: 0;
+    .about-intro :global(.about-portrait) {
+      width: 140px;
+      margin: 0 0 8px;
+      order: -1;
     }
   }
 </style>

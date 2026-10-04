@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Chat from '../components/Chat.astro';
+import HeadFollow from '../components/HeadFollow.astro';
 import SequenceVisual from '../components/SequenceVisual.astro';
 import { projects } from '../data/projects';
 import { personSchema } from '../lib/seo';
@@ -38,6 +39,7 @@ const areas = [
 
 <BaseLayout schema={personSchema()}>
   <section class="home-hero" aria-labelledby="home-title">
+    <HeadFollow size={196} priority class="hero-portrait" />
     <p class="eyebrow">
       AI <span>·</span> LLMs <span>·</span> Computational biology
     </p>
@@ -187,13 +189,7 @@ const areas = [
   </section>
 
   <section class="home-about home-section" aria-labelledby="about-title">
-    <img
-      src="/images/profile/avatar.webp"
-      alt="Nikesh Gyawali"
-      width="120"
-      height="120"
-      loading="lazy"
-    />
+    <HeadFollow size={120} />
     <div>
       <span class="eyebrow">The person behind the work</span><h2
         id="about-title"
@@ -211,11 +207,14 @@ const areas = [
 </BaseLayout>
 <style>
   :global(.content) {
-    padding-top: 40px;
+    padding-top: 44px;
   }
   .home-hero {
     text-align: center;
     padding: 0 0 28px;
+  }
+  .home-hero :global(.hero-portrait) {
+    margin: 0 auto 8px;
   }
   .home-hero .eyebrow {
     font-size: 11px;
@@ -418,12 +417,6 @@ const areas = [
     align-items: center;
     padding-bottom: 0;
   }
-  .home-about img {
-    border-radius: 8px;
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-  }
   .home-about h2 {
     font-size: 25px;
     margin: 14px 0;
@@ -475,6 +468,9 @@ const areas = [
     }
     .hero-position {
       font-size: 11px;
+    .home-hero :global(.hero-portrait) {
+      margin-bottom: 20px;
+    }
     }
     .workspace-note {
       gap: 12px;
@@ -534,9 +530,8 @@ const areas = [
       gap: 24px;
       padding-bottom: 0;
     }
-    .home-about img {
-      width: 80px;
-      height: 80px;
+    .home-about :global(.head-follow) {
+      width: 96px;
     }
   }
 </style>
