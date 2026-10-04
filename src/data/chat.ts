@@ -90,7 +90,7 @@ export function buildPreparedAnswers(
       ...(articleAliases[post.id] ?? []),
     ],
     reply: `Nikesh wrote “${post.data.title}”.\n\n${post.data.description}`,
-    more:
+    more: `From Nikesh’s article, “${post.data.title}”:\n\n${
       (post.body ?? '')
         .split(/\n\s*\n/)
         .filter((paragraph) => /^[A-Za-z]/.test(paragraph))
@@ -98,7 +98,8 @@ export function buildPreparedAnswers(
         .join('\n\n')
         .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
         .replace(/[*`]/g, '')
-        .slice(0, 1800) || post.data.description,
+        .slice(0, 1800) || post.data.description
+    }`,
     sources: [{ title: 'Read article', url: `/blog/${post.id}` }],
   }));
   return [

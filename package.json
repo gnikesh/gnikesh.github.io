@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "test": "node --experimental-strip-types --test --test-isolation=none tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test --test-isolation=none tests/*.test.mjs",
+    "chat:serve": "node --experimental-strip-types --env-file-if-exists=.env server/http.ts"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

@@ -1,4 +1,5 @@
-import { findPreparedAnswer, type PreparedAnswer } from './prepared-answers';
+import type { PreparedAnswer } from './prepared-answers';
+import { exactPreparedAnswer } from './chat-scope';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -29,6 +30,8 @@ export function initializeChat(root: HTMLElement) {
   )!;
   const prompts =
     root.querySelectorAll<HTMLButtonElement>('[data-chat-prompt]');
+  const thinking = root.querySelector<HTMLElement>('[data-chat-thinking]')!;
+  const announcer = root.querySelector<HTMLElement>('[data-chat-announcer]')!;
   const messages: Message[] = [];
   const answers = JSON.parse(
     root.querySelector('[data-chat-answers]')?.textContent ?? '[]',
@@ -48,9 +51,10 @@ export function initializeChat(root: HTMLElement) {
       button.disabled = value === 'busy';
     });
     form.setAttribute('aria-busy', String(value === 'busy'));
+    thinking.hidden = value !== 'busy';
   }
 
-  function append(message: Message, sources: Source[] = []) {
+  function append(message: Message, sources: Source[] = [], reveal = false) {
     const block = document.createElement('div');
     block.className = `message message--${message.role}`;
     const label = document.createElement('span');
@@ -58,10 +62,11 @@ export function initializeChat(root: HTMLElement) {
     label.textContent = message.role === 'user' ? 'YOU' : 'NIKESH AI';
     const text = document.createElement('p');
     text.className = 'message__text';
-    text.textContent = message.content;
+    text.textContent = reveal ? '' : message.content;
     block.append(label, text);
     const links = document.createElement('div');
     links.className = 'message__sources';
+    links.hidden = reveal;
     for (const source of sources.slice(0, 5)) {
       if (
         !source ||
@@ -91,6 +96,55 @@ export function initializeChat(root: HTMLElement) {
     suggestions.hidden = true;
     reset.hidden = false;
     log.scrollTop = log.scrollHeight;
+    return { block, text, links };
+  }
+
+  function pause(ms: number, signal: AbortSignal) {
+    return new Promise<void>((resolve, reject) => {
+      if (signal.aborted) {
+        reject(new DOMException('Cancelled', 'AbortError'));
+        return;
+      }
+      const abort = () => {
+        window.clearTimeout(timer);
+        signal.removeEventListener('abort', abort);
+        reject(new DOMException('Cancelled', 'AbortError'));
+      };
+      const timer = window.setTimeout(() => {
+        signal.removeEventListener('abort', abort);
+        resolve();
+      }, ms);
+      signal.addEventListener('abort', abort, { once: true });
+    });
+  }
+
+  async function revealReply(
+    message: Message,
+    sources: Source[],
+    signal: AbortSignal,
+  ) {
+    thinking.hidden = true;
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    const { block, text, links } = append(message, sources, !reduceMotion);
+    if (!reduceMotion) {
+      status.textContent = 'RESPONDING';
+      block.classList.add('message--typing');
+      const words = message.content.match(/\S+\s*|\s+/g) ?? [message.content];
+      const chunkSize = Math.max(1, Math.ceil(words.length / 65));
+      for (let offset = 0; offset < words.length; offset += chunkSize) {
+        await pause(24, signal);
+        const atBottom =
+          log.scrollHeight - log.scrollTop - log.clientHeight < 48;
+        text.textContent = words.slice(0, offset + chunkSize).join('');
+        if (atBottom) log.scrollTop = log.scrollHeight;
+      }
+      text.textContent = message.content;
+      block.classList.remove('message--typing');
+      links.hidden = false;
+    }
+    announcer.textContent = `Nikesh AI: ${message.content}`;
   }
 
   async function submit(text: string, isRetry = false) {
@@ -103,12 +157,15 @@ export function initializeChat(root: HTMLElement) {
       append({ role: 'user', content });
     }
     failedMessage = '';
+    announcer.textContent = '';
     error.hidden = true;
     input.value = '';
     input.style.height = '';
-    controller = new AbortController();
+    const currentController = new AbortController();
+    controller = currentController;
+    const began = performance.now();
     const currentRequest = ++requestId;
-    const timeout = window.setTimeout(() => controller?.abort(), 30000);
+    const timeout = window.setTimeout(() => currentController.abort(), 30000);
     state('busy');
     try {
       const endpoint = root.dataset.endpoint;
@@ -118,30 +175,53 @@ export function initializeChat(root: HTMLElement) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages: messages.slice(-12) }),
-          signal: controller.signal,
+          signal: currentController.signal,
         });
+        if (response.status === 429) throw new Error('RATE_LIMITED');
         if (!response.ok)
           throw new Error(`Chat request failed: ${response.status}`);
         result = (await response.json()) as ChatReply;
       } else {
-        const answer = findPreparedAnswer(content, answers, previousAnswerId);
+        const previous = answers.find(
+          (answer) => answer.id === previousAnswerId,
+        );
+        const answer =
+          exactPreparedAnswer(content, answers, previous) ??
+          answers.find((answer) => answer.id === 'fallback')!;
         previousAnswerId = answer.id;
         result = { reply: answer.reply, sources: answer.sources };
       }
       if (!result || typeof result.reply !== 'string' || !result.reply.trim())
         throw new Error('Empty chat reply.');
       if (currentRequest !== requestId) return;
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        await pause(
+          Math.max(0, 550 - (performance.now() - began)),
+          currentController.signal,
+        );
+      }
       const answer: Message = { role: 'assistant', content: result.reply };
-      messages.push(answer);
-      append(answer, Array.isArray(result.sources) ? result.sources : []);
-      state('ready');
-    } catch {
+      await revealReply(
+        answer,
+        Array.isArray(result.sources) ? result.sources : [],
+        currentController.signal,
+      );
       if (currentRequest !== requestId) return;
+      messages.push(answer);
+      state('ready');
+    } catch (failure) {
+      if (currentRequest !== requestId) return;
+      log.querySelector('.message--typing')?.remove();
       failedMessage = content;
-      errorText.textContent = 'Couldn’t connect. Please try again in a moment.';
+      const rateLimited =
+        failure instanceof Error && failure.message === 'RATE_LIMITED';
+      errorText.textContent = rateLimited
+        ? 'Please wait a minute before sending another question.'
+        : 'Couldn’t connect. Please try again in a moment.';
       error.hidden = false;
       input.value = content;
       state('error');
+      if (rateLimited) status.textContent = 'PAUSED';
     } finally {
       clearTimeout(timeout);
       if (currentRequest === requestId) {
@@ -187,6 +267,7 @@ export function initializeChat(root: HTMLElement) {
     controller = undefined;
     messages.length = 0;
     previousAnswerId = undefined;
+    announcer.textContent = '';
     failedMessage = '';
     log.replaceChildren();
     log.hidden = true;

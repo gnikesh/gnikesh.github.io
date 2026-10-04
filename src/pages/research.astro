@@ -110,6 +110,15 @@ import { site } from '../data/site';
         publications.map((pub) => (
           <li>
             <div class="pub-content">
+              <h3 class="title">
+                {pub.url ? (
+                  <a href={pub.url} target="_blank" rel="noopener noreferrer">
+                    {pub.title} <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  pub.title
+                )}
+              </h3>
               <p class="periodical">
                 {pub.venue} · {pub.date}
               </p>
@@ -122,6 +131,9 @@ import { site } from '../data/site';
   </section>
 </BaseLayout>
 <style>
+  .pub-content .title {
+    line-height: 1.45;
+  }
   .research-position {
     display: flex;
     gap: 32px;
