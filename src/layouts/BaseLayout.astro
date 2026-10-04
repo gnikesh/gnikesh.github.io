@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import JsonLd from '../components/JsonLd.astro';
@@ -66,6 +67,9 @@ const pageSchema: Schema[] = [
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-newsreader" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-plex-mono" preload={[{ weight: 400 }]} />
       rel="alternate"
       type="application/rss+xml"
       title={site.title}

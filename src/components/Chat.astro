@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import { buildPreparedAnswers } from '../data/chat';
-const endpoint = import.meta.env.PUBLIC_CHAT_ENDPOINT || '';
+const endpoint =
+  import.meta.env.PUBLIC_CHAT_ENDPOINT ||
+  (import.meta.env.DEV ? '/api/chat' : '');
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -64,13 +66,25 @@ const suggestions = [
     data-chat-messages
     role="log"
     aria-label="Conversation with Nikesh AI"
-    aria-live="polite"
+    aria-live="off"
     tabindex="0"
     hidden
   >
   </div>
+  <div class="chat__thinking" data-chat-thinking aria-hidden="true" hidden>
+    <span class="chat__thinking-dots"><i></i><i></i><i></i></span>
+    <span>Thinking</span>
+  </div>
+  <p
+    class="sr-only"
+    data-chat-announcer
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+  </p>
   <div class="chat__error" data-chat-error role="alert" hidden>
-    <p data-chat-error-text>Couldn't connect. Please try again in a moment.</p>
+    <p data-chat-error-text>Couldn’t connect. Please try again in a moment.</p>
     <button type="button" data-chat-retry>Try again ↗</button>
   </div>
   <form class="chat__form" data-chat-form>
@@ -165,9 +179,11 @@ const suggestions = [
     padding: 24px 0 20px;
   }
   .chat__greeting {
-    font-size: 24px;
+    font-family: var(--font-serif);
+    font-optical-sizing: auto;
+    font-size: 26px;
     font-weight: 500;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.015em;
     margin-bottom: 6px;
   }
   .chat__welcome p + p {
@@ -215,11 +231,13 @@ const suggestions = [
     color: var(--accent-contrast);
     background: var(--accent);
   }
-  .chat__send:hover {
+  .chat__send:not(:disabled):hover {
     background: var(--accent-strong);
   }
+  /* Inactive until there is a message, but still legible. */
   .chat__send:disabled {
-    opacity: 0.5;
+    color: var(--accent);
+    background: var(--accent-soft);
   }
   .chat__suggestions {
     display: flex;
@@ -264,7 +282,7 @@ const suggestions = [
   .chat__messages :global(.message__label) {
     display: block;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.05em;
     margin-bottom: 8px;
     color: var(--accent);
@@ -294,6 +312,68 @@ const suggestions = [
     border-left: 2px solid var(--danger);
     padding-left: 12px;
     font-size: 12px;
+  }
+  .chat__thinking {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 4px 24px;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .chat__thinking-dots {
+    display: flex;
+    gap: 5px;
+  }
+  .chat__thinking-dots i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: thinking-dot 1.2s ease-in-out infinite;
+  }
+  .chat__thinking-dots i:nth-child(2) {
+    animation-delay: 160ms;
+  }
+  .chat__thinking-dots i:nth-child(3) {
+    animation-delay: 320ms;
+  }
+  .chat__messages :global(.message--typing .message__text::after) {
+    content: '';
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    margin-left: 3px;
+    vertical-align: -2px;
+    background: var(--accent);
+    animation: reply-caret 700ms steps(1) infinite;
+  }
+  @keyframes thinking-dot {
+    0%,
+    70%,
+    100% {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+    35% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+  @keyframes reply-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chat__thinking-dots i {
+      animation: none;
+      opacity: 0.7;
+    }
+    .chat__messages :global(.message--typing .message__text::after) {
+      animation: none;
+    }
   }
   .chat__error p {
     color: var(--text-muted);
@@ -341,12 +421,16 @@ const suggestions = [
       gap: 4px;
     }
     .chat__reset {
-      font-size: 10px;
+      font-size: 11px;
       max-width: 84px;
       line-height: 1.4;
     }
     textarea {
       font-size: 16px;
+    }
+    /* Typed text stays at 16px (no iOS zoom); the hint fits one line on narrow phones. */
+    textarea::placeholder {
+      font-size: 13px;
     }
   }
 </style>

@@ -49,7 +49,7 @@ const schema: Schema[] = [
     <span class="eyebrow">The personal notebook</span><h1>
       Thinking out loud.
     </h1><p>
-      Things I'm learning, building, debugging, reading, and thinking about.
+      Things I’m learning, building, debugging, reading, and thinking about.
       Notes from the work, and occasionally from everything around it.
     </p>
   </header>
@@ -180,8 +180,13 @@ const schema: Schema[] = [
     gap: 32px;
     margin-top: 40px;
   }
+  /* The toolbar's rule already separates the list; avoid a second line just below it. */
+  .year-group:first-child [data-blog-entry]:first-child :global(.post-item) {
+    border-top: 0;
+  }
   .year-heading {
     font-family: var(--font-mono);
+    font-weight: 400;
     font-size: 14px;
     color: var(--text-faint);
     padding-top: 32px;

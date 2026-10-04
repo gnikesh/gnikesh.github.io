@@ -58,9 +58,10 @@ import { site } from '../data/site';
     max-width: var(--wrapper-max);
   }
   .wordmark {
-    font-size: 20px;
-    letter-spacing: -0.06em;
-    font-weight: 800;
+    font-family: var(--font-serif);
+    font-size: 21px;
+    letter-spacing: -0.01em;
+    font-weight: 600;
     color: var(--text);
   }
   .wordmark span {
@@ -72,13 +73,16 @@ import { site } from '../data/site';
     gap: 24px;
   }
   .github-link {
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 11px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
     min-height: 44px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+  }
+  .github-link:hover {
+    color: var(--accent);
   }
   .menu-button {
     display: none;
@@ -100,6 +104,12 @@ import { site } from '../data/site';
     }
     .menu-button {
       display: flex;
+    }
+    /* Pair the theme toggle with the menu button beside it. */
+    .header__right :global(.theme-toggle) {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-elevated);
     }
   }
   @media (max-width: 640px) {

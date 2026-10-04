@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialLinks from '../components/SocialLinks.astro';
 import { site } from '../data/site';
+import { headFollow } from '../data/head-follow';
 ---
 
 <BaseLayout
@@ -9,8 +10,8 @@ import { site } from '../data/site';
   description={`Get in touch with ${site.author.name}.`}
 >
   <header class="page-heading">
-    <span class="eyebrow">Let's connect</span><h1>Start a conversation.</h1><p>
-      Research, an idea, or something you're building. I'd like to hear about
+    <span class="eyebrow">Let’s connect</span><h1>Start a conversation.</h1><p>
+      Research, an idea, or something you’re building. I’d like to hear about
       it.
     </p>
   </header>
@@ -18,10 +19,10 @@ import { site } from '../data/site';
     <aside class="contact-profile">
       <a class="image avatar" href="/" aria-label={site.author.name}>
         <img
-          src="/images/profile/avatar.webp"
+          src={headFollow.still}
           alt={site.author.name}
-          width="512"
-          height="512"
+          width={headFollow.sheet.frameWidth}
+          height={headFollow.sheet.frameHeight}
         />
       </a>
       <h2 class="site-name">{site.author.name}</h2>
@@ -95,7 +96,7 @@ import { site } from '../data/site';
               name="message"
               rows="6"
               required
-              placeholder="What's on your mind?"></textarea>
+              placeholder="What’s on your mind?"></textarea>
           </div>
 
           <div class="form-actions">
@@ -140,7 +141,6 @@ import { site } from '../data/site';
         </div>
 
         <div class="contact-row">
-          <span class="contact-label">Resume</span>
           <a
             class="btn btn--primary"
             href={site.resume}
@@ -221,7 +221,7 @@ import { site } from '../data/site';
         status.textContent =
           'Oops! There was a problem submitting your form. Please try again.';
       } finally {
-        if (!form.hidden && button) {
+        if (button) {
           button.disabled = false;
           button.textContent = 'Send message';
         }
@@ -233,14 +233,13 @@ import { site } from '../data/site';
 <style>
   .contact-grid {
     display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 200px minmax(0, 1fr);
     gap: 40px;
     align-items: start;
   }
 
   .contact-profile {
     text-align: center;
-    padding-top: 16px;
   }
 
   .contact-profile .avatar {
@@ -264,7 +263,7 @@ import { site } from '../data/site';
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin: 24px 0;
+    margin: 0 0 24px;
     padding: 24px;
     background: var(--bg-elevated);
     border: 1px solid var(--border);
@@ -277,8 +276,7 @@ import { site } from '../data/site';
   }
 
   .contact-form__title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 20px;
     color: var(--text);
     margin: 0 0 4px;
   }
@@ -377,32 +375,20 @@ import { site } from '../data/site';
   }
 
   .form-status--error {
-    --error: #c0392b;
-    color: var(--error);
-  }
-
-  :global([data-theme='dark']) .form-status--error {
-    --error: #ef6a5c;
+    color: var(--danger);
   }
 
   .form-success {
-    --success: #2f9e44;
-    --success-soft: rgba(47, 158, 68, 0.12);
     display: flex;
     gap: 14px;
     align-items: flex-start;
-    margin: 24px 0;
+    margin: 0 0 24px;
     padding: 22px;
     border: 1px solid color-mix(in srgb, var(--success) 40%, transparent);
     background: var(--success-soft);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     animation: success-in 0.35s ease both;
-  }
-
-  :global([data-theme='dark']) .form-success {
-    --success: #69db7c;
-    --success-soft: rgba(105, 219, 124, 0.12);
   }
 
   .form-success[hidden] {
@@ -462,15 +448,6 @@ import { site } from '../data/site';
     gap: 12px;
     flex-wrap: wrap;
     padding: 10px 0;
-  }
-
-  .contact-label {
-    min-width: 90px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--accent);
   }
 
   @media (max-width: 900px) {

@@ -1,6 +1,6 @@
 .prose {
-  font-size: 17px;
-  line-height: 1.85;
+  font-size: 18px;
+  line-height: 1.75;
   color: var(--text);
 }
 
@@ -19,16 +19,16 @@
 }
 
 .prose h1 {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .prose h2 {
-  font-size: 22px;
+  font-size: 27px;
   color: var(--accent);
 }
 
 .prose h3 {
-  font-size: 18px;
+  font-size: 21px;
 }
 
 .prose h4 {
