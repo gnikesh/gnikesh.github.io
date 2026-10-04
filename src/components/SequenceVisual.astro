@@ -1,0 +1,96 @@
+---
+const sequence = 'ATGCCTGAGCATGACCTGACTGATCGATGCACTG';
+---
+
+<div class="sequence-visual" aria-hidden="true">
+  <div class="sequence-label">
+    <span>sequence → representation</span><span>DNA / LM</span>
+  </div>
+  <div class="sequence-grid">
+    {
+      Array.from({ length: 5 }, (_, row) => (
+        <div class="sequence-line">
+          {[...sequence.slice(row * 3, row * 3 + 20)].map((base, column) => (
+            <span class:list={[{ selected: (row + column) % 7 === 0 }]}>
+              {base}
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+  <div class="sequence-output">{Array.from({ length: 8 }, () => <span />)}</div>
+  <p>Patterns in the language of life.</p>
+</div>
+<style>
+  .sequence-visual {
+    padding: 24px;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    overflow: hidden;
+  }
+  .sequence-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+  .sequence-line {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    justify-content: center;
+  }
+  .sequence-line span {
+    width: 16px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    opacity: 0.7;
+  }
+  .sequence-line .selected {
+    color: var(--accent);
+    background: var(--accent-soft);
+    opacity: 1;
+    border-radius: 2px;
+  }
+  .sequence-output {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 50px;
+    margin: 16px 0 12px;
+  }
+  .sequence-output span {
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    opacity: 0.25;
+    border-radius: 2px;
+  }
+  .sequence-output span:nth-child(2n) {
+    height: 30px;
+    opacity: 0.45;
+  }
+  .sequence-output span:nth-child(3n) {
+    height: 40px;
+    opacity: 0.8;
+  }
+  .sequence-visual p {
+    text-align: center;
+    font-size: 11px;
+  }
+  @media (max-width: 480px) {
+    .sequence-visual {
+      padding: 16px 8px;
+    }
+    .sequence-line {
+      gap: 3px;
+    }
+    .sequence-line span {
+      width: 12px;
+    }
+  }
+</style>

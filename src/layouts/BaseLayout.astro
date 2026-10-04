@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import JsonLd from '../components/JsonLd.astro';
@@ -36,7 +37,11 @@ const pageTitle = title ? `${title} | ${site.title}` : site.title;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
 const canonicalUrl = canonical.toString();
 const absoluteImage = new URL(image, canonicalUrl).toString();
-const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
+const imageAlt = image === site.ogImage ? site.ogImageAlt : pageTitle;
+const pageSchema: Schema[] = [
+  websiteSchema(),
+  ...(schema ? (Array.isArray(schema) ? schema : [schema]) : []),
+];
 ---
 
 <!doctype html>
@@ -52,14 +57,25 @@ const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schem
       noindex ? (
         <meta name="robots" content="noindex, nofollow" />
       ) : (
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta
+          name="robots"
+          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
       )
     }
     <meta name="author" content={site.author.name} />
 
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-newsreader" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-plex-mono" preload={[{ weight: 400 }]} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={site.title}
+      href="/rss.xml"
+    />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.title} />
@@ -68,19 +84,34 @@ const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schem
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={absoluteImage} />
-    <meta property="og:image:alt" content={site.author.name} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {
+      image === site.ogImage && (
+        <>
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+        </>
+      )
+    }
     {
       articleMeta && (
         <>
-          <meta property="article:published_time" content={articleMeta.publishedTime} />
-          <meta property="article:modified_time" content={articleMeta.modifiedTime} />
+          <meta
+            property="article:published_time"
+            content={articleMeta.publishedTime}
+          />
+          <meta
+            property="article:modified_time"
+            content={articleMeta.modifiedTime}
+          />
           <meta property="article:author" content={articleMeta.authorUrl} />
-          {
-            articleMeta.section && <meta property="article:section" content={articleMeta.section} />
-          }
-          {
-            articleMeta.tags?.map((tag) => <meta property="article:tag" content={tag} />)
-          }
+          {articleMeta.section && (
+            <meta property="article:section" content={articleMeta.section} />
+          )}
+          {articleMeta.tags?.map((tag) => (
+            <meta property="article:tag" content={tag} />
+          ))}
         </>
       )
     }
@@ -89,6 +120,7 @@ const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schem
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <JsonLd data={pageSchema} />
 
@@ -98,8 +130,12 @@ const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schem
 
         try {
           var stored = localStorage.getItem('theme');
-          var prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          var theme = stored === 'dark' || stored === 'light' ? stored : prefers;
+          var prefers = window.matchMedia('(prefers-color-scheme: dark)')
+            .matches
+            ? 'dark'
+            : 'light';
+          var theme =
+            stored === 'dark' || stored === 'light' ? stored : prefers;
           document.documentElement.dataset.theme = theme;
         } catch (e) {
           document.documentElement.dataset.theme = 'light';
@@ -108,42 +144,13 @@ const pageSchema: Schema[] = [websiteSchema(), ...(schema ? (Array.isArray(schem
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="site-shell">
       <Header />
-      <main class="content">
+      <main class="content" id="main-content">
         <slot />
       </main>
       <Footer />
     </div>
-
-    <script is:inline>
-      (function () {
-        if (!('IntersectionObserver' in window)) {
-          document.querySelectorAll('.section').forEach(function (el) {
-            el.classList.add('visible');
-          });
-          return;
-        }
-
-        var sections = document.querySelectorAll('.section');
-        if (sections.length === 0) return;
-
-        var observer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
-
-        sections.forEach(function (el) {
-          observer.observe(el);
-        });
-      })();
-    </script>
   </body>
 </html>

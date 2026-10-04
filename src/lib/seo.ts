@@ -25,7 +25,7 @@ export function personSchema(): Schema {
     name: site.author.name,
     alternateName: 'gnikesh',
     url: site.url,
-    image: absoluteUrl(site.ogImage),
+    image: absoluteUrl(site.portrait),
     description: site.author.bio,
     jobTitle: site.author.title,
     worksFor: {

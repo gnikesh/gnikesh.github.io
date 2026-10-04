@@ -4,23 +4,45 @@ import ProjectCard from '../components/ProjectCard.astro';
 import { projects } from '../data/projects';
 ---
 
-<BaseLayout title="Projects" description="Selected projects by Nikesh Gyawali - machine learning, NLP, and software engineering.">
-  <section class="section">
-    <h2 class="section-title">Projects</h2>
-    <div class="section-body">
-      <p>
-        A selection of my work in machine learning, natural language processing, and software engineering. Code for
-        most projects is available on my{' '}
-        <a href="https://github.com/gnikesh" target="_blank" rel="noopener noreferrer">GitHub</a>.
-      </p>
-    </div>
-  </section>
-
-  {
-    projects.map((project) => (
-      <section class="section">
-        <ProjectCard project={project} />
-      </section>
-    ))
-  }
+<BaseLayout
+  title="Projects"
+  description="An engineering archive of models, software, and experiments by Nikesh Gyawali."
+>
+  <header class="page-heading">
+    <span class="eyebrow">The engineering archive</span><h1>
+      Things I’ve built.
+    </h1><p>
+      Models, tools, and experiments. Some became research, some became useful
+      software, and some started with a question over the weekend.
+    </p>
+  </header>
+  <div class="archive-heading">
+    <span class="mono">{projects.length} projects / Research & engineering</span
+    ><a
+      href="https://github.com/gnikesh"
+      target="_blank"
+      rel="noopener noreferrer">Explore GitHub ↗</a
+    >
+  </div>
+  <div class="project-archive">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
 </BaseLayout>
+<style>
+  .archive-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    color: var(--text-faint);
+  }
+  .archive-heading a {
+    font-size: 11px;
+  }
+  @media (max-width: 480px) {
+    .archive-heading {
+      flex-direction: column;
+    }
+  }
+</style>
