@@ -39,7 +39,6 @@ const areas = [
 
 <BaseLayout schema={personSchema()}>
   <section class="home-hero" aria-labelledby="home-title">
-    <HeadFollow size={196} priority class="hero-portrait" />
     <p class="eyebrow">
       AI <span>·</span> LLMs <span>·</span> Computational biology
     </p>
@@ -207,14 +206,11 @@ const areas = [
 </BaseLayout>
 <style>
   :global(.content) {
-    padding-top: 44px;
+    padding-top: 40px;
   }
   .home-hero {
     text-align: center;
-    padding: 0 0 28px;
-  }
-  .home-hero :global(.hero-portrait) {
-    margin: 0 auto 8px;
+    padding: 24px 0 28px;
   }
   .home-hero .eyebrow {
     font-size: 11px;
@@ -467,9 +463,6 @@ const areas = [
     }
     .home-hero h1 {
       font-size: clamp(38px, 10vw, 60px);
-    }
-    .home-hero :global(.hero-portrait) {
-      margin-bottom: 20px;
     }
     .hero-description {
       font-size: 14px;

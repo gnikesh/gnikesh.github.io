@@ -34,6 +34,7 @@
 ## Mouse-following portrait
 
 - The user rejected a 3D Pixar-style bust as weird and chose a professional 2D anime bust with a closed-mouth smile (no teeth); keep that direction for portrait updates.
+- Placement (2026-10-15): no portrait in the home hero; only the small one in the home "person behind the work" section and the one on About.
 - `HeadFollow` frames are produced outside the repo in `~/projects/headturn` (a comfy project): Qwen-Image-Edit 2511 still, MiniMax H3 first/last-frame head circle, BiRefNet matting, then `tools/pose.py` and `tools/build_frames.py` pick 96 frames evenly by measured head angle and write `sheet.webp`, `still.webp` and `meta.json`; copy the `meta.json` geometry into `src/data/head-follow.ts`.
 - Visitors' cursors sit below the hero most of the time, so the downward poses matter most. A smiling squint in the source portrait makes the anime eyes close whenever the head looks down (reads sleepy or smug); the user approved a relaxed, slightly more open-eyed portrait (`portrait_open.png`) to fix it.
 - Keep the still/loop switch near-instant; a slow cross-fade between two head poses reads as a double exposure.
