@@ -25,22 +25,22 @@ export async function GET() {
     `- [Home](${url('/')}): Personal website and blog of ${site.author.name}.`,
   );
   lines.push(
-    `- [About](${url('/about')}): ${site.author.title} at Kansas State University - background, experience, and skills.`,
+    `- [About](${url('/about/')}): ${site.author.title} at Kansas State University - background, experience, and skills.`,
   );
   lines.push(
-    `- [Research](${url('/research')}): Research and publications on foundational LLMs for fungal genomes, stance detection, and explainable machine learning.`,
+    `- [Research](${url('/research/')}): Research and publications on foundational LLMs for fungal genomes, stance detection, and explainable machine learning.`,
   );
   lines.push(
-    `- [FunDLM](${url('/projects/fundlm')}): Ongoing foundation-model research for fungal genomes.`,
+    `- [FunDLM](${url('/projects/fundlm/')}): Ongoing foundation-model research for fungal genomes.`,
   );
   lines.push(
-    `- [Projects](${url('/projects')}): Selected open-source projects in machine learning, NLP, and software engineering.`,
+    `- [Projects](${url('/projects/')}): Selected open-source projects in machine learning, NLP, and software engineering.`,
   );
   lines.push(
-    `- [Blog](${url('/blog')}): Writing about machine learning, NLP, programming, and the occasional book or life thought.`,
+    `- [Blog](${url('/blog/')}): Writing about machine learning, NLP, programming, and the occasional book or life thought.`,
   );
   lines.push(
-    `- [Contact](${url('/contact')}): Contact form and social profiles.`,
+    `- [Contact](${url('/contact/')}): Contact form and social profiles.`,
   );
   lines.push('');
   lines.push('## Profile links');
@@ -59,7 +59,7 @@ export async function GET() {
     lines.push('');
     for (const post of posts) {
       lines.push(
-        `- [${post.data.title}](${url(`/blog/${post.id}`)}): ${post.data.description} (${new Date(post.data.pubDate).toISOString().slice(0, 10)}).`,
+        `- [${post.data.title}](${url(`/blog/${post.id}/`)}): ${post.data.description} (${new Date(post.data.pubDate).toISOString().slice(0, 10)}).`,
       );
     }
     lines.push('');

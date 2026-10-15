@@ -10,12 +10,12 @@ const { project } = Astro.props;
   <span class="project-period mono">{project.period}</span>
   <div>
     <span class="project-sub mono">{project.subtitle}</span><h2>
-      <a href={`/projects/${project.slug}`}>{project.name}</a>
+      <a href={`/projects/${project.slug}/`}>{project.name}</a>
     </h2><p>{project.summary}</p>
   </div>
   <a
     class="project-open"
-    href={`/projects/${project.slug}`}
+    href={`/projects/${project.slug}/`}
     aria-label={`Explore ${project.name}`}><span aria-hidden="true">↗</span></a
   >
 </article>

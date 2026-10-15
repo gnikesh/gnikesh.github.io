@@ -14,7 +14,7 @@ Personal website and blog of Nikesh Gyawali, built with [Astro](https://astro.bu
 ```
 .
 ├── .github/workflows/deploy.yml   # GitHub Pages deploy workflow
-├── public/                        # static assets (images, files, favicon, robots.txt)
+├── public/                        # static assets (images, files, favicon)
 ├── src/
 │   ├── components/                # Astro components (Header, Footer, cards, ...)
 │   ├── content/blog/              # blog posts in Markdown
@@ -157,7 +157,9 @@ Production deployment remains tied to `main`.
 
 Pushing to `main` triggers the `.github/workflows/deploy.yml` workflow, which builds the site and deploys `dist/` with the official `actions/deploy-pages` action.
 
-**One-time setup in the repo settings (Settings > Pages):** under _Build and deployment_, set _Source_ to **GitHub Actions**. No `CNAME` is configured, so the site is served at `https://gnikesh.github.io/`.
+**One-time setup in the repo settings (Settings > Pages):** under _Build and deployment_, set _Source_ to **GitHub Actions**, and set the custom domain to `gnikesh.com` (DNS is proxied through Cloudflare). GitHub Pages then 301-redirects `gnikesh.github.io` to `https://gnikesh.com/`, which is the `site` in `astro.config.mjs` and the origin of every canonical URL, the sitemap, and `robots.txt`.
+
+GitHub Pages serves each page from a directory index and redirects `/about` to `/about/`, so internal links always end in `/` (for example `/blog/${post.id}/`). A link without the slash still works but costs a redirect and shows up in Search Console as "Page with redirect".
 
 ## License
 

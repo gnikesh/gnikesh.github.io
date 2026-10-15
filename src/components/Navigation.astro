@@ -4,8 +4,8 @@ interface Props {
   currentPath: string;
 }
 const { currentPath } = Astro.props;
-const isActive = (href: string) =>
-  currentPath === href || currentPath.startsWith(`${href}/`);
+// Section links end in "/", so a prefix match covers the section and its pages.
+const isActive = (href: string) => currentPath.startsWith(href);
 ---
 
 <nav class="nav" aria-label="Primary">

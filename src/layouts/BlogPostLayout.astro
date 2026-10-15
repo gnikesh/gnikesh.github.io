@@ -17,7 +17,7 @@ const { post } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
 const updatedDate = post.data.updatedDate ?? pubDate;
 const readingTime = formatReadingTime(post.body);
-const canonicalUrl = absoluteUrl(`/blog/${post.id}`);
+const canonicalUrl = absoluteUrl(`/blog/${post.id}/`);
 const wordCount = (post.body ?? '').trim().split(/\s+/).filter(Boolean).length;
 const orderedPosts = (await getCollection('blog'))
   .filter((entry) => !entry.data.draft)
@@ -54,7 +54,7 @@ const postSchema: Schema[] = [
   },
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Blog', url: absoluteUrl('/blog') },
+    { name: 'Blog', url: absoluteUrl('/blog/') },
     { name: title, url: canonicalUrl },
   ]),
 ];
@@ -76,7 +76,7 @@ const postSchema: Schema[] = [
 >
   <article class="post">
     <header class="post__header">
-      <a class="post__breadcrumb" href="/blog">← Notebook</a>
+      <a class="post__breadcrumb" href="/blog/">← Notebook</a>
       <h1 class="post__title">{title}</h1>
       <div class="post__meta">
         <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
@@ -125,7 +125,7 @@ const postSchema: Schema[] = [
         <div>
           {
             older && (
-              <a href={`/blog/${older.id}`}>
+              <a href={`/blog/${older.id}/`}>
                 <>
                   <span>← Previous note</span>
                   <strong>{older.data.title}</strong>
@@ -137,7 +137,7 @@ const postSchema: Schema[] = [
         <div>
           {
             newer && (
-              <a href={`/blog/${newer.id}`}>
+              <a href={`/blog/${newer.id}/`}>
                 <>
                   <span>Next note →</span>
                   <strong>{newer.data.title}</strong>
@@ -147,7 +147,7 @@ const postSchema: Schema[] = [
           }
         </div>
       </div>
-      <a class="post__back" href="/blog">&larr; Back to the notebook</a>
+      <a class="post__back" href="/blog/">&larr; Back to the notebook</a>
     </footer>
   </article>
 </BaseLayout>

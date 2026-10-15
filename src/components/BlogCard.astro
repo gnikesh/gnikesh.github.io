@@ -21,7 +21,7 @@ const readingTime = formatReadingTime(post.body);
     <span>{readingTime}</span>
   </div>
   <h3>
-    <a class="post-item-title" href={`/blog/${post.id}`}>{post.data.title}</a>
+    <a class="post-item-title" href={`/blog/${post.id}/`}>{post.data.title}</a>
   </h3>
   {
     post.data.tags.length > 0 && (
@@ -33,7 +33,7 @@ const readingTime = formatReadingTime(post.body);
   <p class="post-item-excerpt">{post.data.description}</p>
   <a
     class="post-read"
-    href={`/blog/${post.id}`}
+    href={`/blog/${post.id}/`}
     aria-label={`Read ${post.data.title}`}
     >Read note <span aria-hidden="true">↗</span></a
   >

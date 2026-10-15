@@ -3,10 +3,10 @@ export const site = {
   author: {
     name: 'Nikesh Gyawali',
     title: 'Postdoctoral Fellow',
-    website: 'https://gnikesh.github.io',
+    website: 'https://gnikesh.com',
     bio: 'I am a Postdoctoral Fellow at Kansas State University, where I recently completed my Ph.D. in Computer Science. My work focuses on building foundational Large Language Models (LLMs) for fungal genomes, with a background in stance detection, NLP, and applied machine learning across bioinformatics and transportation safety.',
   },
-  url: 'https://gnikesh.github.io',
+  url: 'https://gnikesh.com',
   description:
     'The personal workspace of Nikesh Gyawali. Research, projects, and notes on AI, language models, and computational biology at Kansas State University.',
   /** 1200x630 link-preview card (social sharing). */

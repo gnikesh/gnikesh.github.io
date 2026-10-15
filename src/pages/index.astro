@@ -19,19 +19,19 @@ const areas = [
   {
     title: 'Foundation models',
     text: 'Learning useful representations from the language of biological sequences.',
-    href: '/research#foundation-models',
+    href: '/research/#foundation-models',
     symbol: '↳',
   },
   {
     title: 'Large language models',
     text: 'Understanding language, identifying stance, and building practical LLM systems.',
-    href: '/research#language-models',
+    href: '/research/#language-models',
     symbol: '⌘',
   },
   {
     title: 'Computational biology',
     text: 'Connecting machine learning with genomics and the questions inside the data.',
-    href: '/research#computational-biology',
+    href: '/research/#computational-biology',
     symbol: '⋈',
   },
 ];
@@ -49,7 +49,7 @@ const areas = [
         class="desktop-break"
       /> language models, and the language of life.
     </p>
-    <a class="hero-position" href="/about"
+    <a class="hero-position" href="/about/"
       ><span class="position-dot"></span>Postdoctoral Fellow at Kansas State
       University <span aria-hidden="true">↗</span></a
     >
@@ -93,7 +93,7 @@ const areas = [
 
   <section class="home-section" aria-labelledby="featured-title">
     <div class="section-heading">
-      <h2 id="featured-title">Featured research</h2><a href="/research"
+      <h2 id="featured-title">Featured research</h2><a href="/research/"
         >All research <span aria-hidden="true">↗</span></a
       >
     </div>
@@ -107,7 +107,7 @@ const areas = [
           What can a language model learn from DNA? I’m exploring how genomic
           sequences become useful representations, and how those representations
           can help us ask better biological questions.
-        </p><a class="btn" href="/projects/fundlm"
+        </p><a class="btn" href="/projects/fundlm/"
           >Explore the research <span aria-hidden="true">↗</span></a
         >
       </div>
@@ -117,14 +117,14 @@ const areas = [
 
   <section class="home-section" aria-labelledby="projects-title">
     <div class="section-heading">
-      <h2 id="projects-title">Selected projects</h2><a href="/projects"
+      <h2 id="projects-title">Selected projects</h2><a href="/projects/"
         >The full archive <span aria-hidden="true">↗</span></a
       >
     </div>
     <div class="selected-grid">
       {
         selected.map((project) => (
-          <a class="selected-project" href={`/projects/${project.slug}`}>
+          <a class="selected-project" href={`/projects/${project.slug}/`}>
             <>
               <span class="mono">
                 {project.slug === 'fundlm'
@@ -147,7 +147,7 @@ const areas = [
 
   <section class="home-section" aria-labelledby="blog-title">
     <div class="section-heading">
-      <h2 id="blog-title">From the notebook</h2><a href="/blog"
+      <h2 id="blog-title">From the notebook</h2><a href="/blog/"
         >All writing <span aria-hidden="true">↗</span></a
       >
     </div>
@@ -157,7 +157,7 @@ const areas = [
     <div class="home-posts">
       {
         posts.map((post) => (
-          <a class="home-post" href={`/blog/${post.id}`}>
+          <a class="home-post" href={`/blog/${post.id}/`}>
             <>
               <time datetime={post.data.pubDate.toISOString()}>
                 {post.data.pubDate.toLocaleDateString('en-US', {
@@ -199,7 +199,7 @@ const areas = [
         I’m Nikesh, a computer scientist at Kansas State University. I work on
         AI and computational biology, build tools for the problems I run into,
         and write to make sense of what I learn.
-      </p><a class="text-link" href="/about"
+      </p><a class="text-link" href="/about/"
         >A little more about me <span aria-hidden="true">↗</span></a
       >
     </div>
