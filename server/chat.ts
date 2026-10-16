@@ -113,7 +113,7 @@ export async function answerQuestion(
       headers: {
         Authorization: `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://gnikesh.github.io',
+        'HTTP-Referer': 'https://gnikesh.com',
         'X-OpenRouter-Title': 'GNIKESH',
       },
       body: JSON.stringify({

@@ -19,7 +19,7 @@ const schema: Schema[] = [
     '@context': 'https://schema.org',
     '@type': 'Blog',
     '@id': `${site.url}/blog#blog`,
-    mainEntityOfPage: absoluteUrl('/blog'),
+    mainEntityOfPage: absoluteUrl('/blog/'),
     name: 'Blog',
     description:
       'Writing about machine learning, NLP, programming, and the occasional book or life thought.',
@@ -29,13 +29,13 @@ const schema: Schema[] = [
       '@type': 'BlogPosting',
       headline: post.data.title,
       description: post.data.description,
-      url: absoluteUrl(`/blog/${post.id}`),
+      url: absoluteUrl(`/blog/${post.id}/`),
       datePublished: post.data.pubDate.toISOString(),
     })),
   },
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Blog', url: absoluteUrl('/blog') },
+    { name: 'Blog', url: absoluteUrl('/blog/') },
   ]),
 ];
 ---

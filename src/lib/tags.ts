@@ -6,5 +6,5 @@ export function slugifyTag(tag: string): string {
 }
 
 export function tagUrl(tag: string): string {
-  return `/blog/tags/${slugifyTag(tag)}`;
+  return `/blog/tags/${slugifyTag(tag)}/`;
 }

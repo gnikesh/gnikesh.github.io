@@ -65,7 +65,8 @@ const pageSchema: Schema[] = [
     }
     <meta name="author" content={site.author.name} />
 
-    <link rel="canonical" href={canonicalUrl} />
+    {/* A noindex page (the 404) has no canonical URL; "/404/" itself does not exist. */}
+    {!noindex && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <Font cssVariable="--font-inter" preload />
     <Font cssVariable="--font-newsreader" preload={[{ style: 'normal' }]} />
@@ -82,7 +83,7 @@ const pageSchema: Schema[] = [
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl} />
+    {!noindex && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:image" content={absoluteImage} />
     <meta property="og:image:alt" content={imageAlt} />
     {

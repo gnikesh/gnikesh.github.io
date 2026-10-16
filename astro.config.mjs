@@ -3,8 +3,12 @@ import sitemap from '@astrojs/sitemap';
 import { nikeshChatDev } from './server/dev-plugin.ts';
 
 export default defineConfig({
-  site: 'https://gnikesh.github.io/',
-  trailingSlash: 'never',
+  site: 'https://gnikesh.com',
+  // GitHub Pages serves each page from a directory index and 301s "/about" to
+  // "/about/". With the default 'directory' build format, canonical URLs and the
+  // sitemap keep that trailing slash, so internal links must use it too.
+  // 'always' would make the dev server 404 the "/api/chat" middleware.
+  trailingSlash: 'ignore',
   devToolbar: { enabled: false },
   integrations: [sitemap()],
   // Self-hosted at build time, with metric-matched fallbacks to avoid layout shift.

@@ -23,7 +23,7 @@ export async function GET() {
 
   lines.push('## Site pages');
   lines.push('');
-  lines.push(`### About (${url('/about')})`);
+  lines.push(`### About (${url('/about/')})`);
   lines.push('');
   lines.push(
     `${site.author.name} is a ${site.author.title} in the Department of Plant Pathology at Kansas State University. His current work focuses on building foundational Large Language Models (LLMs) for fungal genomes, using large-scale genomic sequence data and scalable HPC training pipelines.`,
@@ -33,7 +33,7 @@ export async function GET() {
     `His Ph.D. research focused on stance detection - developing advanced NLP models, especially transformer-based and Large Language Models (LLMs) - to analyze and classify opinions on contentious topics, with applications in social media analysis and public opinion tracking.`,
   );
   lines.push('');
-  lines.push(`### Research (${url('/research')})`);
+  lines.push(`### Research (${url('/research/')})`);
   lines.push('');
   lines.push(
     `Research areas: Large Language Models and foundation models for genomics (pre-training Transformer models on fungal genomic sequences), stance detection enhanced by LLMs (gun control, vaccines, financial text), and explainable and applied machine learning (crash severity prediction, anomaly detection for medical break-the-glass access).`,
@@ -43,10 +43,10 @@ export async function GET() {
     `Selected work: FunBERT, a pre-trained BERT model for fungal genome DNA language, achieving over 97% accuracy in DNA sequence classification; optimizing financial report analysis with LLMs and semi-supervised learning (over 85% accuracy); AI-driven social media analysis for vaccine sentiment over ten years (2013-2022); commercial motor vehicle crash severity prediction with SHAP explainability; and time series anomaly detection in medical break-the-glass events.`,
   );
   lines.push('');
-  lines.push(`### Projects (${url('/projects')})`);
+  lines.push(`### Projects (${url('/projects/')})`);
   lines.push('');
   for (const project of projects) {
-    lines.push(`#### ${project.name} (${url(`/projects/${project.slug}`)})`);
+    lines.push(`#### ${project.name} (${url(`/projects/${project.slug}/`)})`);
     lines.push('');
     lines.push(project.description);
     lines.push(
@@ -55,10 +55,10 @@ export async function GET() {
     lines.push('');
   }
   lines.push('');
-  lines.push(`### Contact (${url('/contact')})`);
+  lines.push(`### Contact (${url('/contact/')})`);
   lines.push('');
   lines.push(
-    `Contact: use the form on ${url('/contact')}. Resume available at ${url(site.resume)}.`,
+    `Contact: use the form on ${url('/contact/')}. Resume available at ${url(site.resume)}.`,
   );
   lines.push('');
 
@@ -68,7 +68,7 @@ export async function GET() {
   for (const post of posts) {
     lines.push(`### ${post.data.title}`);
     lines.push('');
-    lines.push(`URL: ${url(`/blog/${post.id}`)}`);
+    lines.push(`URL: ${url(`/blog/${post.id}/`)}`);
     lines.push(`Date: ${new Date(post.data.pubDate).toISOString()}`);
     if (post.data.updatedDate) {
       lines.push(`Updated: ${new Date(post.data.updatedDate).toISOString()}`);
